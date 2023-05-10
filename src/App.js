@@ -1,24 +1,50 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState} from 'react';
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import NavBar from './components/NavBar';
+import Products from './components/Product';
+import Basket from './components/Basket';
+import Home from './components/Home';
+import styled from "styled-components";
 
-function App() {
+const App = () => {
+
+
+  const [pricing, setPricing] = useState([
+    {name: "T-shirt", cost: 17.50, image: "tshirt.jpeg"},
+    {name: "Jumper", cost: 25, image: "jumper.jpeg"},
+    {name: "Trainers", cost: 50, image: "shoe.jpeg"},
+    {name: "underwear", cost: 10, image: "pants.jpeg"},
+    {name: "Swimsuit", cost: 35, image: "swimsuit.jpeg"},
+    {name: "Bucket Hat", cost: 27.50, image: "hat.jpeg"}
+  ])
+
+
+  const [basketProducts, setBasketProducts] = useState([])
+
+
+  const addToBasket = (product) => {
+    setBasketProducts([...basketProducts, product])
+}
+
+  const removeFromBasket = (product) => {
+    const updatedBasket = [...basketProducts]
+    const index = updatedBasket.indexOf(product)
+    updatedBasket.splice(index, 1)
+    setBasketProducts(updatedBasket)
+
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <NavBar/>  
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/products" element={<Products products={pricing} addToBasket={addToBasket}/>}/>
+        <Route path="/basket" element={<Basket basketProducts={basketProducts} removeFromBasket={removeFromBasket}/>}/>
+      </Routes>
+      
+    </Router>
   );
 }
 
